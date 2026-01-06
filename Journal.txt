@@ -1,0 +1,34 @@
+                        8:00 6th Jan 2026 - Week 1
+I. First words
+This is my personal journaling for a custom project in the COS10009 course at Swinburne Vietnam.
+I will be documenting ideas, planning, studies. I will refer to myself as J)
+
+II. Background
+I have finished 2 projects in Java before I start this course, I believe it helps me a lot in
+answering myself "where do I start in developing this project?". I have 2 mentors who have led me since I started
+which I am thankful for.
+
+III. Finished works
+I finished setting up a Github repository in my personal account for this project, for the gitignore file, I chose
+Python format on Github when setting up the repo.
+
+IV. Approach
+My approach for this project is firstly to write down a structured planning on paper, covering core ideas, basic features,
+inspirations, plans to study, goals for each weeks and explanation for each.
+
+V. Ideas and features
+The idea for my project is personal training-recovery tracking software with GUI. At its core, I had planned for it to
+log training session, tracks volume, intensity recovery status as well as analyze trends, providing charts and such.
+
+Basic features for this will be adding training session, view weekly/monthly/yearly training summary and status. Users
+will also be able to save and delete datas.
+
+VI. goals
+For week 1, I have planned to learn the fundamentals and get used to syntax of Python. Working on smaller exercises,
+solving Leetcode questions. Alongside, SRS and System diagram will also be visualized on my notebook before I polish it
+digitally.
+I had found that drawing system diagram for a larger project is not the first step in developing an app, I however,
+should start with basic ideas, core features until then can I focus on drawing the control flow.
+                           this will be it for week 1, J out, see you next week.
+
+
