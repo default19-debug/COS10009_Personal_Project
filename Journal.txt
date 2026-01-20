@@ -29,6 +29,16 @@ solving Leetcode questions. Alongside, SRS and System diagram will also be visua
 digitally.
 I had found that drawing system diagram for a larger project is not the first step in developing an app, I however,
 should start with basic ideas, core features until then can I focus on drawing the control flow.
-                           this will be it for week 1, J out, see you next week.
+                           this will be it for today of week 1, J out, see you next time.
+
+
+                            12:50 8th Jan 26-week 1
+I have not got much done since the last time I worked on this project, I finished the flow chart
+on draw.io. I am currently studying Python on W3school.com. From the perspective of one who have
+basic understanding of fundamentals, I glide through stuffs fairly fast, however, I struggle greatly
+with readability when working with Python and stuffs like not forcing return types for not declaring
+data types when declaring new varieables. However, casting has made this alot easier for me, I now use
+Casting every time I declare a new vari.
+
 
 
