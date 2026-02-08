@@ -40,5 +40,11 @@ with readability when working with Python and stuffs like not forcing return typ
 data types when declaring new varieables. However, casting has made this alot easier for me, I now use
 Casting every time I declare a new vari.
 
+                                    20th Jan 26-wwek 3
 
+                                    8th Feb 26 week 5
+I had completely changed my scope and idea for the project, I will be working on a Raycasting engine
+game (Inspired by Wolfenstein 3D 1992), This game will consist of 2 handcrafted 2 levels, 1 wave based
+game modes,2 different kinds of guns, 3 types of monsters.
+I have great interest for this project.
 
