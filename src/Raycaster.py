@@ -21,11 +21,13 @@ class Ratcaster:
 
         for ray in self.ray :
             ray.render(screen)
+
+
     def render_25D(self,screen):
         i =0 #this is the counter, im setting it as i for the sake of debugging.
         for ray in self.ray :
             line_height = (35 / ray.distance) * 350
             draw_begin = WindowHeight/2 - line_height/2
             draw_end = line_height
-            pygame.draw.rect(screen,(0,255,0) , (i*RES,draw_begin,RES,draw_end))
+            pygame.draw.rect(screen,(ray.color,ray.color,ray.color) , (i*RES,draw_begin,RES,draw_end))
             i +=1

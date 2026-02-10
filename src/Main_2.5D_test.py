@@ -16,7 +16,8 @@ while True:
             pygame.quit()
             exit()
 
-
+    pygame.event.set_grab(True)
+    pygame.mouse.set_visible(False)
     Screen.fill((0,0,0))
 
     #map.Render(Screen)

@@ -3,9 +3,10 @@ import pygame
 from Setting import *
 def normalizeAngle(angle):
     angle = angle % (2 * math.pi)
-    if (angle <= 0):
+    if (angle < 0):
         angle = (2 * math.pi) + angle
     return angle
+
 def distancebetween(x1, y1 ,x2,y2):
     return math.sqrt((x2-x1)*(x2-x1)  +  (y2-y1)*(y2-y1))
 
@@ -22,17 +23,17 @@ class Ray:
         self.wall_hit_x = 0
         self.wall_hit_y= 0
         self.distance = 0
+        self.color = 255
 
     def cast(self,screen):
         Found_horizontal_wall = False
         horizontal_hit_x =0
         horizontal_hit_y =0
-
         first_intersect_x = None
         first_intersect_y = None
 
         if self.is_facing_up:
-            first_intersect_y = ((self.player.y)// TileSize ) *TileSize -1
+            first_intersect_y = ((self.player.y)// TileSize ) *TileSize -0.001
         elif self.is_facing_down:
             first_intersect_y = ((self.player.y)// TileSize ) *TileSize + TileSize
 
@@ -69,7 +70,7 @@ class Ray:
         if self.is_facing_right:
             first_intersect_x = ((self.player.x // TileSize) * TileSize) +TileSize
         elif self.is_facing_left:
-            first_intersect_x = (((self.player.x) // TileSize)*TileSize -1)
+            first_intersect_x = (((self.player.x) // TileSize)*TileSize -0.001)
 
         first_intersect_y = self.player.y + (first_intersect_x -self.player.x) * math.tan(self.Rayangle)
 
@@ -111,13 +112,21 @@ class Ray:
             self.wall_hit_x = horizontal_hit_x
             self.wall_hit_y = horizontal_hit_y
             self.distance = hort_dist
+            self.color = 160
         else:
             self.wall_hit_x = vert_hit_x
             self.wall_hit_y = vert_hit_y
             self.distance = vert_dist
+            self.solor = 255
 
 
         self.distance *= math.cos(self.player.RotateAngle - self.Rayangle)
+        self.color *= (60/self.distance) #60 is light level, reduce to make it darker
+        round(self.color) #keep it an int
+        if self.color >255:
+            self.color = 255
+        elif self.color <0:
+            self.color = 0
     def render(self, screen):
         #pygame.draw.line(screen, (50, 255, 0), (self.player.x, self.player.y),
                      #(self.player.x + math.cos(self.Rayangle) * 50,
