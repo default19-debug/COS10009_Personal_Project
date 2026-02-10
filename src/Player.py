@@ -12,10 +12,10 @@ class Player:
         self.turnDireciton = 0
         self.walkDirection = 0
 
-        self.movespeed = 2.5
+        self.movespeed = 1
         self.Rotatespeed = 1
 
-        self.mouse_sens = 0.002
+        self.mouse_sens = 0.001
         pygame.mouse.get_rel()
 
     def update(self):
