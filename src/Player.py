@@ -51,29 +51,19 @@ class Player:
             dx += math.cos(self.RotateAngle - math.pi/2) * self.movespeed
             dy += math.sin(self.RotateAngle - math.pi/2) * self.movespeed
 
-
-        new_x = self.x + dx
-        new_y = self.y + dy
-
-        if dx >0:
-            self.hitbox_x = new_x + 5
-        else:
-            self.hitbox_y =new_x - 5
-
-        if dy >0:
-            self.hitbox_y = new_y + 5
-        else:
-            self.hitbox_y = new_y - 5
-
-        if (self.game_map.grid[int((self.y - 5) / TileSize)][int(self.hitbox_x / TileSize)] == 0 and
-                self.game_map.grid[int((self.y + 5) / TileSize)][int(self.hitbox_x / TileSize)] == 0):
-            self.x = new_x
-
-        if (self.game_map.grid[int(self.hitbox_y / TileSize)][int((self.x - 5) / TileSize)] == 0 and
-                self.game_map.grid[int(self.hitbox_y / TileSize)][int((self.x + 5) / TileSize)] == 0):
-            self.y = new_y
+            new_x = self.x + dx
+            new_y = self.y + dy
+            self.hitbox_x = new_x + (5 if dx > 0 else -5)
+            self.hitbox_y = new_y + (5 if dy > 0 else -5)
 
 
+            if (self.game_map.grid[int((self.y - 5) / TileSize)][int(self.hitbox_x / TileSize)] == 0 and
+                    self.game_map.grid[int((self.y + 5) / TileSize)][int(self.hitbox_x / TileSize)] == 0):
+                self.x = new_x
+
+            if (self.game_map.grid[int(self.hitbox_y / TileSize)][int((self.x - 5) / TileSize)] == 0 and
+                    self.game_map.grid[int(self.hitbox_y / TileSize)][int((self.x + 5) / TileSize)] == 0):
+                self.y = new_y
     def render(self, screen):
         pygame.draw.circle(screen, (255,0,0), (self.x, self.y), self.radius)
         pygame.draw.line(
