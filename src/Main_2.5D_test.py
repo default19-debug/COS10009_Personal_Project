@@ -8,7 +8,7 @@ from Raycaster import*
 Screen = pygame.display.set_mode((WindowWidth, WindowHeight))
 
 map = Map()
-player = Player()
+player = Player(map)
 raycaster = Ratcaster(player,map)
 while True:
     for event in pygame.event.get():
