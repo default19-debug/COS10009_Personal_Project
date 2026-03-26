@@ -47,4 +47,5 @@ I had completely changed my scope and idea for the project, I will be working on
 game (Inspired by Wolfenstein 3D 1992), This game will consist of 2 handcrafted 2 levels, 1 wave based
 game modes,2 different kinds of guns, 3 types of monsters.
 I have great interest for this project.
-
+                                16th Jan 26-week x:
+after spending some times setting up and adding final touches, I finished the

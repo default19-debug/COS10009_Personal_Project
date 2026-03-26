@@ -24,6 +24,7 @@ class Ray:
         self.wall_hit_y= 0
         self.distance = 0
         self.color = 255
+        self.wall_type = 1
 
     def cast(self,screen):
         Found_horizontal_wall = False
@@ -31,6 +32,8 @@ class Ray:
         horizontal_hit_y =0
         first_intersect_x = None
         first_intersect_y = None
+        hort_wall_type = 1
+        vert_wall_type = 1
 
         if self.is_facing_up:
             first_intersect_y = ((self.player.y)// TileSize ) *TileSize -0.001
@@ -55,7 +58,9 @@ class Ray:
                 horizontal_hit_y = next_horizontal_y
                 self.wall_hit_x = horizontal_hit_x
                 self.wall_hit_y = horizontal_hit_y
+                hort_wall_type = self.Map.Get_wall_type(next_horizontal_x, next_horizontal_y)
                 break
+
             else:
                 next_horizontal_x += xa
                 next_horizontal_y += ya
@@ -87,6 +92,7 @@ class Ray:
                 Found_vert_wall = True
                 vert_hit_x = next_vert_x
                 vert_hit_y = next_vert_y
+                vert_wall_type = self.Map.Get_wall_type(next_vert_x, next_vert_y)
                 break
             else:
                 next_vert_x += xa
@@ -113,11 +119,13 @@ class Ray:
             self.wall_hit_y = horizontal_hit_y
             self.distance = hort_dist
             self.color = 160
+            self.wall_type = hort_wall_type
         else:
             self.wall_hit_x = vert_hit_x
             self.wall_hit_y = vert_hit_y
             self.distance = vert_dist
-            self.solor = 255
+            self.color = 255
+            self.wall_type = vert_wall_type
 
 
         self.distance *= math.cos(self.player.RotateAngle - self.Rayangle)
@@ -128,9 +136,7 @@ class Ray:
         elif self.color <0:
             self.color = 0
     def render(self, screen):
-        #pygame.draw.line(screen, (50, 255, 0), (self.player.x, self.player.y),
-                     #(self.player.x + math.cos(self.Rayangle) * 50,
-                      #self.player.y + math.sin(self.Rayangle) * 50))
         pygame.draw.line(screen,(255,0,50) , (self.player.x ,self.player.y),
                          (self.wall_hit_x,self.wall_hit_y))
+
 

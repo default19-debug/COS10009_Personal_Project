@@ -3,7 +3,7 @@ import math
 from Rays import Ray
 from Setting import*
 from Map import *
-class Ratcaster:
+class Raycaster:
     def __init__(self,player,Map):
         self.ray=[]
         self.player = player
@@ -29,5 +29,10 @@ class Ratcaster:
             line_height = (35 / ray.distance) * 350
             draw_begin = WindowHeight/2 - line_height/2
             draw_end = line_height
-            pygame.draw.rect(screen,(ray.color,ray.color,ray.color) , (i*RES,draw_begin,RES,draw_end))
+            if ray.wall_type == 2:
+                pygame.draw.rect(screen, (0, 100, 255), (i * RES, draw_begin, RES, draw_end))
+            else:
+                c = min(255, max(0, int(ray.color)))
+                pygame.draw.rect(screen, (c, c, c), (i * RES, draw_begin, RES, draw_end))
+            #pygame.draw.rect(screen,(ray.color,ray.color,ray.color) , (i*RES,draw_begin,RES,draw_end))
             i +=1

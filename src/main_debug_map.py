@@ -6,10 +6,10 @@ from Player import *
 from Rays import *
 from Raycaster import*
 Screen = pygame.display.set_mode((WindowWidth, WindowHeight))
-
+print(Total_debug_hours)
 map = Map()
 player = Player(map)
-raycaster = Ratcaster(player,map)
+raycaster = Raycaster(player,map)
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -25,6 +25,7 @@ while True:
     raycaster.Castallrays(Screen)
     raycaster.render(Screen)
     pygame.display.update()
+
 
 
 

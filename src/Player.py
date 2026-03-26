@@ -5,8 +5,8 @@ from Map import *
 
 class Player:
     def __init__(self,game_map):
-        self.x = WindowWidth / 2
-        self.y = WindowHeight / 2
+        self.x = (1 * TileSize) + (TileSize / 2)
+        self.y = (1 * TileSize) + (TileSize / 2)
         self.radius = 3
 
         self.RotateAngle = 0
@@ -63,6 +63,15 @@ class Player:
                 self.game_map.grid[int(self.hitbox_y / TileSize)][int((self.x + 5) / TileSize)] == 0):
             self.y = new_y
 
+
+        current_grid_x = int(self.x // TileSize)
+        current_grid_y = int(self.y // TileSize)
+
+
+        if self.game_map.grid[current_grid_y][current_grid_x] == 2:
+            return True  # Tell the main loop we won!
+
+        return False  # Game continues
     def render(self, screen):
         pygame.draw.circle(screen, (255,0,0), (self.x, self.y), self.radius)
         pygame.draw.line(
