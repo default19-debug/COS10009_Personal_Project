@@ -55,12 +55,12 @@ class Player:
         self.hitbox_x = new_x + (5 if dx > 0 else -5)
         self.hitbox_y = new_y + (5 if dy > 0 else -5)
 
-        if (self.game_map.grid[int((self.y - 5) / TileSize)][int(self.hitbox_x / TileSize)] == 0 and
-                self.game_map.grid[int((self.y + 5) / TileSize)][int(self.hitbox_x / TileSize)] == 0):
+        if (self.game_map.grid[int((self.y - 5) / TileSize)][int(self.hitbox_x / TileSize)] in [0,2] and
+                self.game_map.grid[int((self.y + 5) / TileSize)][int(self.hitbox_x / TileSize)] in [0,2]):
             self.x = new_x
 
-        if (self.game_map.grid[int(self.hitbox_y / TileSize)][int((self.x - 5) / TileSize)] == 0 and
-                self.game_map.grid[int(self.hitbox_y / TileSize)][int((self.x + 5) / TileSize)] == 0):
+        if (self.game_map.grid[int(self.hitbox_y / TileSize)][int((self.x - 5) / TileSize)] in [0,2] and
+                self.game_map.grid[int(self.hitbox_y / TileSize)][int((self.x + 5) / TileSize)] in [0,2]):
             self.y = new_y
 
 
@@ -69,7 +69,7 @@ class Player:
 
 
         if self.game_map.grid[current_grid_y][current_grid_x] == 2:
-            return True  # Tell the main loop we won!
+            return True
 
         return False  # Game continues
     def render(self, screen):

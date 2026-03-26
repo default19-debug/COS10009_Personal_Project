@@ -1,5 +1,6 @@
 import pygame
 from Setting import *
+from Scores_system import *
 
 
 class Menu:
@@ -16,6 +17,14 @@ class Menu:
         self.score_rect = pygame.Rect(center_x, 400, button_width, button_height)
 
         self.current_state = "MENU"
+
+        self.scores_file = "scores.json"
+        self.last_time = 0.0
+        self.score_manager = ScoreSystem()
+
+    def save_score(self, time_taken):
+        self.last_time = time_taken
+        self.score_manager.add_score(time_taken)
 
     def draw(self, screen):
 
@@ -37,22 +46,40 @@ class Menu:
         screen.blit(score_text, (self.score_rect.x + 30, self.score_rect.y + 10))
 
 
-        # TODO: Add a "Settings" or "Quit" button render here later if needed
-
     def draw_win_screen(self, screen):
         screen.fill((0, 0, 0))
 
         # --- Draw "YOU WIN" Text ---
-        win_text = self.title_font.render('YOU WIN!', True, (50, 255, 50))  # Nice bright green
+        win_text = self.title_font.render('YOU WIN!', True, (50, 255, 50))
         screen.blit(win_text, (WindowWidth / 2 - win_text.get_width() / 2, 150))
 
-        # --- Draw Scores
-        # TODO: Read from a saved text/json file and display the fastest times here
-        score_text = self.button_font.render('SCORES: [To be implemented]', True, (255, 255, 255))
+        # --- Show the time you just achieved ---
+        score_text = self.button_font.render(f'YOUR TIME: {self.last_time:.2f}s', True, (255, 255, 255))
         screen.blit(score_text, (WindowWidth / 2 - score_text.get_width() / 2, 300))
 
         return_text = self.button_font.render('Press N to Return to Menu', True, (100, 100, 100))
         screen.blit(return_text, (WindowWidth / 2 - return_text.get_width() / 2, 450))
+
+    def draw_score_screen(self, screen):
+        screen.fill((0, 0, 0))
+
+        title_text = self.title_font.render('TOP TIMES', True, (50, 150, 255))
+        screen.blit(title_text, (WindowWidth / 2 - title_text.get_width() / 2, 100))
+
+        scores = self.score_manager.get_top_scores()
+
+        if not scores:
+            no_score = self.button_font.render("No scores yet! Go play!", True, (200, 200, 200))
+            screen.blit(no_score, (WindowWidth / 2 - no_score.get_width() / 2, 250))
+        else:
+            for i, score in enumerate(scores):
+                text = self.button_font.render(f"{i + 1}. {score:.2f}s", True, (255, 255, 255))
+                screen.blit(text, (WindowWidth / 2 - text.get_width() / 2, 250 + (i * 50)))
+
+        return_text = self.button_font.render('Press N to Return to Menu', True, (100, 100, 100))
+        screen.blit(return_text, (WindowWidth / 2 - return_text.get_width() / 2, 550))
+
+
 
     def update(self, events):
         self.current_state = "MENU"
@@ -66,8 +93,6 @@ class Menu:
                     self.current_state = "PLAY"
 
                 elif self.score_rect.collidepoint(mouse_pos):
-                    # TODO: Implement reading the score file here
-                    # TODO: Change self.current_state to "SCORE_SCREEN" once built
-                    print("Scores button clicked! (Score system not yet implemented)")
+                    return "SCORES"
 
         return self.current_state
