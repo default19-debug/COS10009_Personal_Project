@@ -5,7 +5,9 @@ from Map import *
 from Player import *
 from Rays import *
 from Raycaster import*
+pygame.init()
 #Set window size, need to make this adjustable later
+clock = pygame.time.Clock()
 Screen = pygame.display.set_mode((WindowWidth, WindowHeight))
 
 map = Map()
@@ -13,7 +15,9 @@ player = Player(map)
 raycaster = Raycaster(player,map)
 game_menu = Menu()
 current_state = "MENU"
+
 while True:
+    clock.tick(100)
     events = pygame.event.get()
 
     for event in events:
@@ -37,9 +41,9 @@ while True:
         pygame.event.set_grab(False)
         pygame.mouse.set_visible(True)
         game_menu.draw(Screen)
+        old_state = current_state
         current_state = game_menu.update(events)
-        previous_state = current_state
-        if current_state == "PLAY" and previous_state == "MENU":
+        if current_state == "PLAY" and old_state == "MENU":
             start_time = pygame.time.get_ticks()
 
 
