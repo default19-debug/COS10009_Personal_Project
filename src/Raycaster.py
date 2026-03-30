@@ -24,11 +24,16 @@ class Raycaster:
 
 
     def render_25D(self,screen):
+        self.z_buffer = []
+        for ray in self.ray:
+            self.z_buffer.append(ray.distance)
         i =0 #this is the counter, im setting it as i for the sake of debugging.
         for ray in self.ray :
             line_height = (35 / ray.distance) * 350
-            draw_begin = WindowHeight/2 - line_height/2
+            draw_begin =(WindowHeight / 2) - (line_height / 2) + self.player.walk_offset
             draw_end = line_height
+
+
             if ray.wall_type == 2:
                 pygame.draw.rect(screen, (0, 100, 255), (i * RES, draw_begin, RES, draw_end))
             else:

@@ -129,7 +129,7 @@ class Ray:
 
 
         self.distance *= math.cos(self.player.RotateAngle - self.Rayangle)
-        self.color *= (60/self.distance) #60 is light level, reduce to make it darker
+        self.color *= (20/self.distance) #60 is light level, reduce to make it darker
         round(self.color) #keep it an int
         if self.color >255:
             self.color = 255

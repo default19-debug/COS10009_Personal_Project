@@ -5,13 +5,14 @@ from Map import *
 from Player import *
 from Rays import *
 from Raycaster import*
+from Anubis import *
 pygame.init()
-#Set window size, need to make this adjustable later
 clock = pygame.time.Clock()
 Screen = pygame.display.set_mode((WindowWidth, WindowHeight))
 
 map = Map()
 player = Player(map)
+anubis = Anubis(map.exit_col*35, map.exit_row*35, map, player)
 raycaster = Raycaster(player,map)
 game_menu = Menu()
 current_state = "MENU"
@@ -35,6 +36,7 @@ while True:
                 map = Map()
                 player = Player(map)
                 raycaster = Raycaster(player, map)
+                anubis = Anubis(map.exit_col*35, map.exit_row*35, map, player)
 
     # --- STATE: MAIN MENU ---
     if current_state == "MENU":
@@ -63,6 +65,16 @@ while True:
         Screen.fill((0, 0, 0))
 
         has_won = player.update()
+        is_dead = anubis.update()
+
+        if is_dead:
+            print("CAUGHT BY Epstein! YOU DIED!")
+            current_state = "MENU"
+            current_state = "MENU"
+            map = Map()
+            player = Player(map)
+            raycaster = Raycaster(player, map)
+            anubis = Anubis(map.exit_col * 35, map.exit_row * 35, map, player)
 
         if has_won:
             current_state = "WIN"
@@ -72,6 +84,8 @@ while True:
         if current_state == "PLAY":
             raycaster.Castallrays(Screen)
             raycaster.render_25D(Screen)
+            anubis.render_25D(Screen, raycaster.z_buffer)  # <--- NEW: 5. Draw him in 3D!
+
 
     # --- STATE: WINNING-----
     elif current_state == "WIN":

@@ -24,6 +24,10 @@ class Player:
         self.new_x=0
         self.new_y=0
         self.game_map = game_map
+
+        self.bob_timer = 0
+        self.walk_offset = 0
+        self.is_moving = False
     def update(self):
         self.turnDireciton = 0
         self.walkDirection = 0
@@ -54,6 +58,21 @@ class Player:
         new_y = self.y + dy
         self.hitbox_x = new_x + (5 if dx > 0 else -5)
         self.hitbox_y = new_y + (5 if dy > 0 else -5)
+
+        # --- HEADBOB  ---
+        is_moving = False
+        if keys[pygame.K_w] or keys[pygame.K_s] or keys[pygame.K_a] or keys[pygame.K_d]:
+            is_moving = True
+
+        if is_moving:
+            self.bob_timer += 0.15
+            self.walk_offset = math.sin(self.bob_timer) * 20
+        else:
+
+            self.walk_offset *= 0.8
+            if abs(self.walk_offset) < 0.1:
+                self.walk_offset = 0
+                self.bob_timer = 0
 
         if (self.game_map.grid[int((self.y - 5) / TileSize)][int(self.hitbox_x / TileSize)] in [0,2] and
                 self.game_map.grid[int((self.y + 5) / TileSize)][int(self.hitbox_x / TileSize)] in [0,2]):

@@ -27,6 +27,7 @@ while True:
     raycaster.Castallrays(Screen)
     raycaster.render(Screen)
     anubis.render(Screen)
+    anubis.update()
     pygame.display.update()
 
 
