@@ -5,10 +5,12 @@ from Map import *
 from Player import *
 from Rays import *
 from Raycaster import*
+from Anubis import *
 Screen = pygame.display.set_mode((WindowWidth, WindowHeight))
 print(Total_debug_hours)
 map = Map()
 player = Player(map)
+anubis = Anubis(100, 100, map, player)
 raycaster = Raycaster(player,map)
 while True:
     for event in pygame.event.get():
@@ -24,6 +26,7 @@ while True:
     player.update()
     raycaster.Castallrays(Screen)
     raycaster.render(Screen)
+    anubis.render(Screen)
     pygame.display.update()
 
 

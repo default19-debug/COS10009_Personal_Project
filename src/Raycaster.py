@@ -33,6 +33,6 @@ class Raycaster:
                 pygame.draw.rect(screen, (0, 100, 255), (i * RES, draw_begin, RES, draw_end))
             else:
                 c = min(255, max(0, int(ray.color)))
-                pygame.draw.rect(screen, (c, c, c), (i * RES, draw_begin, RES, draw_end))
+                pygame.draw.rect(screen, (c, 0, 0), (i * RES, draw_begin, RES, draw_end))
             #pygame.draw.rect(screen,(ray.color,ray.color,ray.color) , (i*RES,draw_begin,RES,draw_end))
             i +=1
