@@ -28,16 +28,29 @@ class Player:
         self.bob_timer = 0
         self.walk_offset = 0
         self.is_moving = False
+        self.footstep_sound = pygame.mixer.Sound('playersound/footstep.mp3')
+        self.footstep_sound.set_volume(0.4)
+        self.step_played = False
+
     def update(self):
+
+
         self.turnDireciton = 0
         self.walkDirection = 0
-
+        self.movespeed = 1
+        self.walk_offset=0.15
         keys = pygame.key.get_pressed()
 
 
         mx, my = pygame.mouse.get_rel()
         self.turnDireciton = mx * self.mouse_sens
         self.RotateAngle += self.turnDireciton * self.Rotatespeed
+
+        if keys[pygame.K_LSHIFT]:
+            self.movespeed = 2.5
+            self.walk_offset = 0.30  # Double the headbob speed for a running effect!
+
+
         movestep = 0
         if keys[pygame.K_w]:
             movestep = self.movespeed
@@ -67,12 +80,22 @@ class Player:
         if is_moving:
             self.bob_timer += 0.15
             self.walk_offset = math.sin(self.bob_timer) * 20
+
+            if math.sin(self.bob_timer) < -0.9 and not self.step_played:
+                self.footstep_sound.play()
+                self.step_played = True
+
+            elif math.sin(self.bob_timer) > 0:
+                self.step_played = False
         else:
 
             self.walk_offset *= 0.8
             if abs(self.walk_offset) < 0.1:
                 self.walk_offset = 0
                 self.bob_timer = 0
+                self.step_played = False
+
+
 
         if (self.game_map.grid[int((self.y - 5) / TileSize)][int(self.hitbox_x / TileSize)] in [0,2] and
                 self.game_map.grid[int((self.y + 5) / TileSize)][int(self.hitbox_x / TileSize)] in [0,2]):

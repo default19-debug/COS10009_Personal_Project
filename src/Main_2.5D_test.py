@@ -9,13 +9,13 @@ from Anubis import *
 pygame.init()
 clock = pygame.time.Clock()
 Screen = pygame.display.set_mode((WindowWidth, WindowHeight))
-
 map = Map()
 player = Player(map)
 anubis = Anubis(map.exit_col*35, map.exit_row*35, map, player)
 raycaster = Raycaster(player,map)
 game_menu = Menu()
 current_state = "MENU"
+
 
 while True:
     clock.tick(100)
@@ -68,8 +68,10 @@ while True:
         is_dead = anubis.update()
 
         if is_dead:
-            print("CAUGHT BY Epstein! YOU DIED!")
-            current_state = "MENU"
+            jumpscare_img = pygame.transform.scale(anubis.image, (WindowWidth, WindowHeight))
+            Screen.blit(jumpscare_img, (0, 0))
+            pygame.display.update()
+            pygame.time.wait(1500)
             current_state = "MENU"
             map = Map()
             player = Player(map)

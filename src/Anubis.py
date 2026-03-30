@@ -10,15 +10,16 @@ class Anubis:
         self.y = start_y
         self.radius = 5
         self.speed = 1
-
+        self.scream_sound = pygame.mixer.Sound('monstersound/sound_1.mp3')
         self.game_map = game_map
         self.player = player
 
         self.path = []  # This will store the list of (grid_x, grid_y) coordinates to follow
 
-        self.image = pygame.image.load('image.png').convert_alpha()
+        self.image = pygame.image.load('image/image.png').convert_alpha()
         self.state = "HUNTING"
         self.enrage_start_time = 0
+        self.last_enrage_time = 0
 
     def get_grid_pos(self, x, y):
         """Converts raw (x, y) coordinates into grid [row][col] indices."""
@@ -69,10 +70,69 @@ class Anubis:
 
             self.path.reverse()
 
+    def has_line_of_sight(self):
+        """Checks if there is a clear path between Anubis and the Player."""
+        dx = self.player.x - self.x
+        dy = self.player.y - self.y
+        dist = math.sqrt(dx ** 2 + dy ** 2)
+
+        # Check every half-tile distance along the line
+        steps = int(dist / (TileSize / 2))
+        if steps == 0:
+            return True
+
+        step_x = dx / steps
+        step_y = dy / steps
+
+        check_x = self.x
+        check_y = self.y
+
+        for _ in range(steps):
+            check_x += step_x
+            check_y += step_y
+            col, row = self.get_grid_pos(check_x, check_y)
+
+            # Ensure we are inside bounds
+            if 0 <= row < len(self.game_map.grid) and 0 <= col < len(self.game_map.grid[0]):
+                if self.game_map.grid[row][col] == 1:
+                    return False  # A wall blocks the sightline!
+
+        return True
+
+
     def update(self):
         self.find_path_bfs()
 
-        # Get our current grid positions
+        #enrage state, better AI for more immersiveness
+        has_los = self.has_line_of_sight()
+        current_time = pygame.time.get_ticks()
+
+        if self.state == "HUNTING":
+            self.speed = 0.2
+            if has_los:
+                if current_time - self.last_enrage_time > 5000:
+                    self.state = "ENRAGING"
+                    self.enrage_start_time = current_time
+                    self.last_enrage_time = current_time  # Reset the cooldown
+                    self.scream_sound.play()
+                    self.speed = 0
+                else:
+                    self.state = "SPRINTING"
+
+        elif self.state == "ENRAGING":
+            # freeze for 1s and scream
+            self.speed = 0
+            # 1s passed, start running after player
+            if current_time - self.enrage_start_time >= 1000:
+                self.state = "SPRINTING"
+
+        elif self.state == "SPRINTING":
+            # players' suffering are the joy of me
+            self.speed = 3.5
+            if not has_los:
+                # congrats, line of sight broken ur safe
+                self.state = "HUNTING"
+
         anubis_col, anubis_row = self.get_grid_pos(self.x, self.y)
         player_col, player_row = self.get_grid_pos(self.player.x, self.player.y)
 
