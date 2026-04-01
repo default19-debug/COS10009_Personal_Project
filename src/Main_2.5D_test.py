@@ -86,7 +86,8 @@ while True:
         if current_state == "PLAY":
             raycaster.Castallrays(Screen)
             raycaster.render_25D(Screen)
-            anubis.render_25D(Screen, raycaster.z_buffer)  # <--- NEW: 5. Draw him in 3D!
+            anubis.render_25D(Screen, raycaster.z_buffer)
+            player.render_stamina(Screen)
 
 
     # --- STATE: WINNING-----

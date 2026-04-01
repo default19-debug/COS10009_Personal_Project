@@ -61,12 +61,11 @@ class ScoreSystem:
         self.save_scores()
 
     def save_scores(self):
-        """Writes the current score list back to the JSON file."""
+
         with open(self.filename, 'w') as file:
             json.dump(self.scores, file)
 
     def get_top_scores(self):
-        """Returns the scores so the Menu can display them."""
         return self.scores
 
 

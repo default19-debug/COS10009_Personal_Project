@@ -32,6 +32,9 @@ class Player:
         self.footstep_sound.set_volume(0.4)
         self.step_played = False
 
+        self.is_sprinting = False
+        self.stamina = 100
+        self.is_exhausted = False
     def update(self):
 
 
@@ -46,10 +49,24 @@ class Player:
         self.turnDireciton = mx * self.mouse_sens
         self.RotateAngle += self.turnDireciton * self.Rotatespeed
 
-        if keys[pygame.K_LSHIFT]:
-            self.movespeed = 2.5
-            self.walk_offset = 0.30  # Double the headbob speed for a running effect!
+        is_moving_keys = keys[pygame.K_w] or keys[pygame.K_s] or keys[pygame.K_a] or keys[pygame.K_d]
+        is_sprinting = keys[pygame.K_LSHIFT] and is_moving_keys and not self.is_exhausted
 
+        if is_sprinting:
+            self.movespeed = 2.5
+            self.walk_offset = 0.30  # Double headbob
+            self.stamina -= 0.5  # Drain stamina (adjust rate as needed)
+            if self.stamina <= 0:
+                self.stamina = 0
+                self.is_exhausted = True
+        else:
+            self.stamina += 0.2  # Regenerate stamina
+            if self.stamina >= 100:
+                self.stamina = 100
+
+            # Allow sprinting again once we recover a bit of the gas tank
+            if self.is_exhausted and self.stamina > 20:
+                self.is_exhausted = False
 
         movestep = 0
         if keys[pygame.K_w]:
@@ -97,6 +114,8 @@ class Player:
 
 
 
+
+
         if (self.game_map.grid[int((self.y - 5) / TileSize)][int(self.hitbox_x / TileSize)] in [0,2] and
                 self.game_map.grid[int((self.y + 5) / TileSize)][int(self.hitbox_x / TileSize)] in [0,2]):
             self.x = new_x
@@ -123,3 +142,28 @@ class Player:
             (self.x + 40 * math.cos(self.RotateAngle),
              self.y + 40 * math.sin(self.RotateAngle))
         )
+
+    def render_stamina(self, screen):
+        bar_width = 200
+        bar_height = 15
+
+        # Center the bar at the bottom of the screen
+        x = (WindowWidth / 2) - (bar_width / 2)
+        y = WindowHeight - 40
+
+        current_stamina_width = (self.stamina / 100) * bar_width
+
+        # Change color to red if exhausted, otherwise green
+        if self.is_exhausted:
+            stamina_color = (255, 50, 50)  # Red
+        else:
+            stamina_color = (50, 255, 50)  # Green
+
+        # 1. Draw the dark background (empty stamina)
+        pygame.draw.rect(screen, (40, 40, 40), (x, y, bar_width, bar_height))
+
+        # 2. Draw the current stamina
+        pygame.draw.rect(screen, stamina_color, (x, y, current_stamina_width, bar_height))
+
+        # 3. Draw a white border around it for a clean look
+        pygame.draw.rect(screen, (255, 255, 255), (x, y, bar_width, bar_height), 2)

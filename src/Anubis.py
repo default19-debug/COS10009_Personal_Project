@@ -119,7 +119,7 @@ class Anubis:
                 else:
                     self.state = "SPRINTING"
 
-        elif self.state == "ENRAGING":
+        elif self.state == F"ENRAGING":
             # freeze for 1s and scream
             self.speed = 0
             # 1s passed, start running after player
