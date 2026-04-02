@@ -35,6 +35,7 @@ class Player:
         self.is_sprinting = False
         self.stamina = 100
         self.is_exhausted = False
+
     def update(self):
 
 
@@ -51,6 +52,8 @@ class Player:
 
         is_moving_keys = keys[pygame.K_w] or keys[pygame.K_s] or keys[pygame.K_a] or keys[pygame.K_d]
         is_sprinting = keys[pygame.K_LSHIFT] and is_moving_keys and not self.is_exhausted
+        flashlight_on = keys[pygame.K_f]
+
 
         if is_sprinting:
             self.movespeed = 2.5
@@ -167,3 +170,4 @@ class Player:
 
         # 3. Draw a white border around it for a clean look
         pygame.draw.rect(screen, (255, 255, 255), (x, y, bar_width, bar_height), 2)
+

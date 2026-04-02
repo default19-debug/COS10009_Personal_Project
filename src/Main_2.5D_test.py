@@ -1,3 +1,5 @@
+import pygame.mixer
+
 from Menu import *
 import pygame
 from Setting import *
@@ -28,6 +30,7 @@ while True:
         if event.type == pygame.KEYDOWN:
 
             if event.key == pygame.K_1 or event.key == pygame.K_m:
+                player.sound_flashlight.play(1)
                 pygame.quit()
                 exit()
 
@@ -38,7 +41,7 @@ while True:
                 raycaster = Raycaster(player, map)
                 anubis = Anubis(map.exit_col*35, map.exit_row*35, map, player)
 
-    # --- STATE: MAIN MENU ---
+
     if current_state == "MENU":
         pygame.event.set_grab(False)
         pygame.mouse.set_visible(True)
@@ -50,14 +53,11 @@ while True:
 
 
 
-    # --- STATE: LEADERBOARD SCORES ---
     elif current_state == "SCORES":
         pygame.event.set_grab(False)
         pygame.mouse.set_visible(True)
         game_menu.draw_score_screen(Screen)
 
-
-    # --- STATE: PLAYING-----
     elif current_state == "PLAY":
 
         pygame.event.set_grab(True)
@@ -85,12 +85,13 @@ while True:
             current_state = "WIN"
         if current_state == "PLAY":
             raycaster.Castallrays(Screen)
+
             raycaster.render_25D(Screen)
             anubis.render_25D(Screen, raycaster.z_buffer)
+
             player.render_stamina(Screen)
 
 
-    # --- STATE: WINNING-----
     elif current_state == "WIN":
         pygame.event.set_grab(False)
         pygame.mouse.set_visible(True)

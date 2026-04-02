@@ -2,6 +2,7 @@ import pygame
 import math
 from Setting import *
 from collections import deque
+import random
 
 
 class Anubis:
@@ -15,9 +16,9 @@ class Anubis:
         self.player = player
 
         self.path = []  # This will store the list of (grid_x, grid_y) coordinates to follow
-
+        self.patrol_target = None
         self.image = pygame.image.load('image/image.png').convert_alpha()
-        self.state = "HUNTING"
+        self.state = "PATROLLING"
         self.enrage_start_time = 0
         self.last_enrage_time = 0
 
@@ -27,10 +28,10 @@ class Anubis:
         row = int(y // TileSize)
         return col, row
 
-    def find_path_bfs(self):
-        """Finds the shortest path from Anubis to the Player using Breadth-First Search."""
+    def find_path_bfs(self, target_col, target_row):
+        """Finds the shortest path from Anubis to a specific grid coordinate."""
         anubis_grid = self.get_grid_pos(self.x, self.y)
-        player_grid = self.get_grid_pos(self.player.x, self.player.y)
+        target_grid = (target_col, target_row)
 
         queue = deque([anubis_grid])
         visited = {anubis_grid}
@@ -39,7 +40,7 @@ class Anubis:
         while queue:
             current = queue.popleft()
 
-            if current == player_grid:
+            if current == target_grid:
                 break
 
             col, row = current
@@ -51,23 +52,19 @@ class Anubis:
             ]
 
             for n_col, n_row in neighbors:
-
                 if 0 <= n_row < len(self.game_map.grid) and 0 <= n_col < len(self.game_map.grid[0]):
-
-
                     if self.game_map.grid[n_row][n_col] != 1 and (n_col, n_row) not in visited:
                         queue.append((n_col, n_row))
                         visited.add((n_col, n_row))
                         came_from[(n_col, n_row)] = current
 
         self.path = []
-        current = player_grid
+        current = target_grid
 
         if current in came_from:
             while current != anubis_grid:
                 self.path.append(current)
                 current = came_from[current]
-
             self.path.reverse()
 
     def has_line_of_sight(self):
@@ -99,39 +96,49 @@ class Anubis:
 
         return True
 
-
     def update(self):
-        self.find_path_bfs()
-
-        #enrage state, better AI for more immersiveness
         has_los = self.has_line_of_sight()
         current_time = pygame.time.get_ticks()
 
-        if self.state == "HUNTING":
-            self.speed = 0.2
-            if has_los:
-                if current_time - self.last_enrage_time > 5000:
-                    self.state = "ENRAGING"
-                    self.enrage_start_time = current_time
-                    self.last_enrage_time = current_time  # Reset the cooldown
-                    self.scream_sound.play()
-                    self.speed = 0
-                else:
-                    self.state = "SPRINTING"
+        if has_los and self.state == "PATROLLING":
+            if current_time - self.last_enrage_time > 5000:
+                self.state = "ENRAGING"
+                self.enrage_start_time = current_time
+                self.last_enrage_time = current_time
+                self.scream_sound.play()
+            else:
+                self.state = "SPRINTING"
 
-        elif self.state == F"ENRAGING":
-            # freeze for 1s and scream
+        elif not has_los and self.state == "SPRINTING":
+            # Player broke line of sight
+            self.state = "PATROLLING"
+            self.patrol_target = None  #clear current path
+
+        if self.state == "PATROLLING":
+            self.speed = 0.5
+
+            if self.patrol_target is None or len(self.path) == 0:
+                valid_spots = []
+                for r in range(len(self.game_map.grid)):
+                    for c in range(len(self.game_map.grid[0])):
+                        if self.game_map.grid[r][c] in [0, 2]:
+                            valid_spots.append((c, r))
+
+                if valid_spots:
+                    self.patrol_target = random.choice(valid_spots)
+
+            if self.patrol_target:
+                self.find_path_bfs(self.patrol_target[0], self.patrol_target[1])
+
+        elif self.state == "ENRAGING":
             self.speed = 0
-            # 1s passed, start running after player
             if current_time - self.enrage_start_time >= 1000:
                 self.state = "SPRINTING"
 
         elif self.state == "SPRINTING":
-            # players' suffering are the joy of me
-            self.speed = 3.5
-            if not has_los:
-                # congrats, line of sight broken ur safe
-                self.state = "HUNTING"
+            self.speed = 2.2
+            player_col, player_row = self.get_grid_pos(self.player.x, self.player.y)
+            self.find_path_bfs(player_col, player_row)
 
         anubis_col, anubis_row = self.get_grid_pos(self.x, self.y)
         player_col, player_row = self.get_grid_pos(self.player.x, self.player.y)
@@ -143,14 +150,13 @@ class Anubis:
 
         elif len(self.path) > 0:
             target_col, target_row = self.path[0]
-
             target_x = (target_col * TileSize) + (TileSize / 2)
             target_y = (target_row * TileSize) + (TileSize / 2)
 
             dist_to_target = math.sqrt((target_x - self.x) ** 2 + (target_y - self.y) ** 2)
 
             if dist_to_target < 2:
-                self.path.pop(0)
+                self.path.pop(0)  # Reached the node, go to the next one
             else:
                 angle = math.atan2(target_y - self.y, target_x - self.x)
                 self.x += math.cos(angle) * self.speed
@@ -186,11 +192,11 @@ class Anubis:
 
 
         screen_x = (WindowWidth / 2) + (math.tan(delta_angle) * 350)
-        sprite_size = int((35 / distance) * 350)
+        sprite_size = int((35/ distance) * 350)
 
         scaled_img = pygame.transform.scale(self.image, (sprite_size, sprite_size))
 
-        light_level = int(255 * (20 / distance))
+        light_level = int(255 * (50 / distance))
         light_level = min(255, max(0, light_level))
 
         tint = pygame.Surface((sprite_size, sprite_size))
